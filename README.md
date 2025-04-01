@@ -1,5 +1,10 @@
 # SNS API 서버
 
+![Kotlin](https://img.shields.io/badge/kotlin-1.9.20-blue.svg)
+![Ktor](https://img.shields.io/badge/ktor-2.3.6-orange.svg)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14-blue.svg)
+![MongoDB](https://img.shields.io/badge/MongoDB-5.0-green.svg)
+
 **Ktor 기반의 소셜 네트워크 서비스 RESTful API 서버**
 
 ## 프로젝트 개요
