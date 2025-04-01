@@ -9,6 +9,8 @@
 
 ## 프로젝트 개요
 
+<img src="https://github.com/user-attachments/assets/c644bb2d-a500-4ce5-91b0-e276b7564a30" width="100%" max-width="800px" alt="SNS API 서버 아키텍처">
+
 본 프로젝트는 Kotlin과 Ktor 프레임워크를 활용한 SNS 앱 백엔드 API 서버입니다. 사용자 관리, 게시글, 댓글, 좋아요, 팔로우, 실시간 채팅, 파일 업로드 등 SNS의 핵심 기능을 RESTful API로 제공합니다.
 
 ## 주요 기능
