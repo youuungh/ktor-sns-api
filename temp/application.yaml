@@ -1,0 +1,66 @@
+ktor:
+    application:
+        modules:
+            - com.ninezero.ApplicationKt.module
+    deployment:
+        port: 8080
+        watch:
+          - classes
+          - resources
+        maxFileSize: -1 # unlimited
+    development: true
+
+jwt:
+  secret-key: "HZlwN0hgjD8kQR2jy4fMsSh8nf/4o8GTN4WXllv1pC8="
+  issuer: "ninezero"
+  expired-time: 180000000000
+  audience: "board-users"
+  realm: "ktor board"
+
+#file:
+#  uploadPath: "upload-file"
+#  baseUrl: "http://10.0.2.2:8080/upload-file"
+#  maxFileSize: 10485760
+
+# MongoDB 설정
+db:
+  mongo:
+    uri: "mongodb+srv://Ninezero:Qv6S1Fvsz3b2I2q3@cluster0.q295y.mongodb.net"
+    database:
+      name: "sns-upload-file"
+    gridfs:
+      bucket: "upload-file"
+      chunkSize: 1048576 # 1MB
+      maxFileSize: 16777216 # 16MB
+
+# H2 Database 설정
+h2:
+  console:
+    enabled: true
+    path: "/h2-console"
+    settings:
+      webAllowOthers: true
+
+database:
+  driverClassName: "org.h2.Driver"
+  url: "jdbc:h2:~/ninezero-db"
+  user: "sa"
+  password: ""
+
+security:
+  cors:
+    allowedHosts: ["*"]
+    allowedMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
+    allowedHeaders: ["Content-Type", "Authorization", "Token"]
+
+logging:
+  level:
+    root: INFO
+    com.ninezero: DEBUG # 프로덕션 환경에서는 INFO
+    org.mongodb.driver: WARN
+    org.mongodb.driver.connection.tls: ERROR
+    org.mongodb.driver.cluster: WARN
+
+exposed:
+  show-sql: true
+  format-sql: true

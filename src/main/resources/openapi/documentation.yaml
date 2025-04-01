@@ -1,0 +1,1403 @@
+openapi: "3.0.3"
+info:
+  title: "Ktor SNS API"
+  description: "Ninezero RESTful API"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+paths:
+  /api/users/sign-up:
+    post:
+      tags:
+        - "Users"
+      summary: "회원가입"
+      description: "회원가입 API"
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/UserCreateRequest"
+      responses:
+        "200":
+          description: "회원가입 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /api/users/login:
+    post:
+      tags:
+        - "Users"
+      summary: "토큰 발급 요청"
+      description: "토큰 발급 요청 API"
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/UserLoginRequest"
+      responses:
+        "200":
+          description: "로그인 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/users:
+    get:
+      tags:
+        - "Users"
+      summary: "전체 사용자 목록 조회"
+      description: "전체 사용자 목록 조회 API 입니다."
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /api/users/{id}:
+    get:
+      tags:
+        - "Users"
+      summary: "특정 사용자 정보 조회"
+      description: "특정 사용자 정보 조회 API 입니다."
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/users/{id}/follow:
+    post:
+      tags:
+        - "Users"
+      summary: "팔로우"
+      description: "특정 사용자 팔로우 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "팔로우 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    delete:
+      tags:
+        - "Users"
+      summary: "팔로우 취소"
+      description: "특정 사용자 팔로우 취소 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "팔로우 취소 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/users/my-page:
+    get:
+      tags:
+        - "Users"
+      summary: "내 정보 조회"
+      description: "내 정보 조회 API"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    patch:
+      tags:
+        - "Users"
+      summary: "내 정보 수정"
+      description: "요청자의 정보 수정 API"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: "수정 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/users/search:
+    get:
+      tags:
+        - "Users"
+      summary: "사용자 검색"
+      description: "사용자 검색 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: "검색어 (사용자 이름 또는 ID)"
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: "검색 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/users/recent-searches:
+    get:
+      tags:
+        - "Users"
+      summary: "최근 검색 기록 조회"
+      description: "사용자의 최근 검색 기록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: "조회할 최근 검색 기록 수"
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/users/recent-searches/{userId}:
+    post:
+      tags:
+        - "Users"
+      summary: "최근 검색 기록 저장"
+      description: "사용자 검색 기록 저장 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "저장 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    delete:
+      tags:
+        - "Users"
+      summary: "특정 최근 검색 기록 삭제"
+      description: "특정 사용자의 검색 기록 삭제 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "삭제 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/users/recent-searches/clear:
+    delete:
+      tags:
+        - "Users"
+      summary: "모든 최근 검색 기록 삭제"
+      description: "사용자의 모든 검색 기록 삭제 API"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        "200":
+          description: "삭제 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /api/boards:
+    post:
+      tags:
+        - "Boards"
+      summary: "게시글 작성"
+      description: "게시글 작성 API"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/BoardCreateRequest"
+      responses:
+        "200":
+          description: "작성 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    get:
+      tags:
+        - "Boards"
+      summary: "게시글 목록 조회"
+      description: "게시글 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/my-boards:
+    get:
+      tags:
+        - "Boards"
+      summary: "내 게시물 목록 조회"
+      description: "내 게시물 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "401":
+          description: "인증 실패"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/saved-boards:
+    get:
+      tags:
+        - "Boards"
+      summary: "저장된 게시글 목록 조회"
+      description: "저장된 게시글 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/user/{userId}:
+    get:
+      tags:
+        - "Boards"
+      summary: "특정 사용자의 게시글 목록 조회"
+      description: "특정 사용자의 게시글 목록을 조회하는 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/{id}:
+    patch:
+      tags:
+        - "Boards"
+      summary: "게시글 수정"
+      description: "게시글 수정 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/BoardUpdateRequest"
+      responses:
+        "200":
+          description: "수정 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    delete:
+      tags:
+        - "Boards"
+      summary: "게시글 삭제"
+      description: "게시글 삭제 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "삭제 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/{board-id}/comments:
+    get:
+      tags:
+        - "Comments"
+      summary: "댓글 목록 조회"
+      description: "게시글의 댓글 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: page
+          in: query
+          description: "페이지 번호"
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          description: "페이지당 댓글 수"
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    post:
+      tags:
+        - "Comments"
+      summary: "댓글 작성"
+      description: "댓글 작성 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/CommentCreateRequest"
+      responses:
+        "200":
+          description: "작성 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/{board-id}/comments/{parent-id}/replies:
+    get:
+      tags:
+        - "Comments"
+      summary: "대댓글 목록 조회"
+      description: "특정 댓글의 대댓글 목록 전체 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: parent-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/{board-id}/comments/{id}:
+    delete:
+      tags:
+        - "Comments"
+      summary: "댓글 삭제"
+      description: "댓글 삭제 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "삭제 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/{board-id}/like:
+    post:
+      tags:
+        - "Boards"
+      summary: "좋아요"
+      description: "특정 게시글 좋아요 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "좋아요 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    delete:
+      tags:
+        - "Boards"
+      summary: "좋아요 취소"
+      description: "특정 게시글 좋아요 취소 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "좋아요 취소 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/boards/{board-id}/save:
+    post:
+      tags:
+        - "Boards"
+      summary: "게시글 저장"
+      description: "특정 게시글 저장 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "저장 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    delete:
+      tags:
+        - "Boards"
+      summary: "게시글 저장 취소"
+      description: "특정 게시글 저장 취소 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: board-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "저장 취소 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /api/files:
+    post:
+      tags:
+        - "Files"
+      summary: "파일 업로드 API"
+      description: "파일 업로드 API"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: "파일 업로드 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /api/chat/rooms:
+    post:
+      tags:
+        - "Chat"
+      summary: "채팅방 생성"
+      description: "새로운 채팅방 생성 API"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/CreateChatRoomRequest"
+      responses:
+        "200":
+          description: "채팅방 생성 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    get:
+      tags:
+        - "Chat"
+      summary: "채팅방 목록 조회"
+      description: "사용자의 채팅방 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/chat/rooms/{roomId}/messages:
+    get:
+      tags:
+        - "Chat"
+      summary: "채팅 메시지 이력 조회"
+      description: "특정 채팅방의 메시지 이력 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/chat/rooms/{roomId}/messages/{messageId}/read:
+    post:
+      tags:
+        - "Chat"
+      summary: "메시지 읽음 처리"
+      description: "채팅 메시지 읽음 처리 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "읽음 처리 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/chat/rooms/{roomId}:
+    delete:
+      tags:
+        - "Chat"
+      summary: "채팅방 나가기"
+      description: "채팅방 나가기 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "채팅방 나가기 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /api/notifications:
+    get:
+      tags:
+        - "Notifications"
+      summary: "알림 목록 조회"
+      description: "사용자의 알림 목록 조회 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: "조회 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+        "400":
+          description: "잘못된 요청"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/notifications/{id}:
+    delete:
+      tags:
+        - "Notifications"
+      summary: "알림 삭제"
+      description: "특정 알림 삭제 API"
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: "삭제 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+  /api/notifications/all:
+    delete:
+      tags:
+        - "Notifications"
+      summary: "모든 알림 삭제"
+      description: "사용자의 모든 알림 삭제 API"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        "200":
+          description: "삭제 성공"
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+components:
+  schemas:
+    UserCreateRequest:
+      type: object
+      properties:
+        loginId:
+          type: string
+        userName:
+          type: string
+        password:
+          type: string
+        extraUserInfo:
+          type: string
+        profileImagePath:
+          type: string
+
+    UserLoginRequest:
+      type: object
+      properties:
+        loginId:
+          type: string
+        password:
+          type: string
+
+    GetUserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        loginId:
+          type: string
+        userName:
+          type: string
+        extraUserInfo:
+          type: string
+        profileImagePath:
+          type: string
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        userName:
+          type: string
+        extraUserInfo:
+          type: string
+        profileImagePath:
+          type: string
+
+    RecentSearch:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        searchedUserId:
+          type: integer
+          format: int64
+        searchedUserName:
+          type: string
+        searchedUserProfileImagePath:
+          type: string
+          nullable: true
+        searchedAt:
+          type: string
+          format: date-time
+
+    BoardListResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/BoardResponse"
+
+    BoardResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        createUserId:
+          type: integer
+          format: int64
+        createUserName:
+          type: string
+        createUserProfileImagePath:
+          type: string
+          nullable: true
+        updateUserId:
+          type: integer
+          format: int64
+        updateUserName:
+          type: string
+        updateUserProfileImagePath:
+          type: string
+          nullable: true
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/CommentResponse"
+        commentCount:
+          type: integer
+          format: int32
+        likesCount:
+          type: integer
+          format: int32
+        isLiked:
+          type: boolean
+          description: "현재 사용자의 좋아요 여부"
+        isFollowing:
+          type: boolean
+          description: "게시글 작성자에 대한 팔로우 여부"
+        isSaved:
+          type: boolean
+          description: "현재 사용자의 게시글 저장 여부"
+
+    BoardCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+
+    BoardUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+
+    CommentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        comment:
+          type: string
+          description: "댓글 내용"
+        parentId:
+          type: integer
+          format: int64
+          nullable: true
+          description: "부모 댓글 ID"
+        parentUserName:
+          type: string
+          nullable: true
+          description: "부모 댓글 작성자 이름"
+        depth:
+          type: integer
+          format: int32
+          description: "댓글 깊이 (0: 최상위 댓글, 1: 대댓글)"
+        mentionedUserIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          nullable: true
+          description: "멘션된 사용자 ID 목록"
+        replyCount:
+          type: integer
+          format: int32
+          description: "대댓글 수"
+        replyToCommentId:
+          type: integer
+          format: int64
+          nullable: true
+          description: "답글 대상이 되는 댓글 ID"
+        replyToUserName:
+          type: string
+          nullable: true
+          description: "답글 대상 사용자 이름"
+        createdAt:
+          type: string
+          format: date-time
+        createUserId:
+          type: integer
+          format: int64
+        createUserName:
+          type: string
+        profileImageUrl:
+          type: string
+          nullable: true
+
+    CommentCreateRequest:
+      type: object
+      properties:
+        comment:
+          type: string
+          description: "댓글 내용"
+        parentId:
+          type: integer
+          format: int64
+          nullable: true
+          description: "부모 댓글 ID"
+        mentionedUserIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          nullable: true
+          description: "멘션된 사용자 ID 목록"
+        replyToCommentId:
+          type: integer
+          format: int64
+          nullable: true
+          description: "대댓글 내에서 답글 대상이 되는 댓글 ID"
+
+    FileResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        filePath:
+          type: string
+
+    CreateChatRoomRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "채팅방 이름"
+        participantIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          description: "참가자 ID 목록"
+
+    ChatMessageRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          description: "메시지 내용"
+        roomId:
+          type: string
+          description: "채팅방 ID"
+
+    ChatRoomResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        participants:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatParticipant"
+        lastMessage:
+          $ref: "#/components/schemas/ChatMessage"
+        createdAt:
+          type: integer
+          format: int64
+
+    ChatParticipant:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        userName:
+          type: string
+        profileImagePath:
+          type: string
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        senderId:
+          type: integer
+          format: int64
+        senderName:
+          type: string
+        roomId:
+          type: string
+        createdAt:
+          type: integer
+          format: int64
+
+    CommonResponse:
+      type: object
+      properties:
+        result:
+          type: string
+          enum: [SUCCESS, FAIL]
+        data:
+          type: object
+        errorCode:
+          type: string
+        errorMessage:
+          type: string
+
+    NotificationResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          type: string
+          description: "알림 유형"
+        body:
+          type: string
+          description: "알림 내용"
+        senderId:
+          type: integer
+          format: int64
+          nullable: true
+        senderLoginId:
+          type: string
+          nullable: true
+        senderName:
+          type: string
+          nullable: true
+        senderProfileImagePath:
+          type: string
+          nullable: true
+        boardId:
+          type: integer
+          format: int64
+          nullable: true
+        commentId:
+          type: integer
+          format: int64
+          nullable: true
+        roomId:
+          type: string
+          nullable: true
+        isRead:
+          type: boolean
+          description: "읽음 여부"
+        createdAt:
+          type: string
+          format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
